@@ -1,0 +1,58 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: The ref of OI Wiki's main repo.
+        required: true
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Wait for previous deployment
+      uses: softprops/turnstyle@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout OI-wiki
+      uses: actions/checkout@v2
+      with:
+        repository: OI-wiki/OI-wiki
+        ref: ${{ github.event.inputs.ref }}
+        path: OI-wiki
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 17.x
+        check-latest: true
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
+    - name: Build
+      run: yarn ts-node build.ts
+    - name: Push to GitHub
+      run: |
+        cd OI-wiki
+
+        git add .
+        git commit -am "Upload mirror site on $(date '+%Y-%m-%d %H:%M:%S')"
+        git remote add mirror https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git push -f mirror HEAD:website
+        
+        rm -rf .git
+    - name: Deploy to Azure Static Web App
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        action: upload
+        app_location: /OI-wiki
+        skip_app_build: true
+
+
+
+
+
+
