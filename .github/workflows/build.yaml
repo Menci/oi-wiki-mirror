@@ -37,6 +37,7 @@ jobs:
       run: |
         cd OI-wiki
 
+        cp ../public/* .
         git add .
         git commit -am "Upload mirror site on $(date '+%Y-%m-%d %H:%M:%S')"
         git remote add mirror https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
