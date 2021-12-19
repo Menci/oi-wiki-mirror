@@ -54,9 +54,3 @@ jobs:
         action: upload
         app_location: /OI-wiki
         skip_app_build: true
-
-
-
-
-
-
