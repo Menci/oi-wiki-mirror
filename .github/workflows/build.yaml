@@ -35,6 +35,9 @@ jobs:
       run: yarn ts-node build.ts
     - name: Push to GitHub
       run: |
+        git config --global user.name $(git show -s --format='%an' HEAD)
+        git config --global user.email $(git show -s --format='%ae' HEAD)
+
         cd OI-wiki
 
         cp ../public/* .
