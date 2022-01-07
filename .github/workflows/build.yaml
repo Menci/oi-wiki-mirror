@@ -38,6 +38,7 @@ jobs:
       with:
         www-root: OI-wiki
         target-base-url: https://cdn-static.menci.xyz/oi-wiki/
+        http-404-page: 404.html
     - id: commit-push
       name: Push to GitHub
       run: |
