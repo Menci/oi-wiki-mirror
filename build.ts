@@ -52,7 +52,7 @@ const process = async (htmlFilePath: string) => {
           }
           const fileHash = await hash(resolvedPath);
 
-          const resolvedCdnUrl = new URL(originalUrl, htmlFileCdnUrl);
+          const resolvedCdnUrl = new URL(originalUrl.startsWith("/") ? originalUrl.slice(1) : originalUrl, htmlFileCdnUrl);
           resolvedCdnUrl.search = "";
           resolvedCdnUrl.searchParams.set("h", fileHash);
           $(element).attr(attributeName, resolvedCdnUrl.toString());
