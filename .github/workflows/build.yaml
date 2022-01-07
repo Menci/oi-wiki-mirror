@@ -79,6 +79,7 @@ jobs:
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         project: menci-oi-wiki
         commitHash: ${{ steps.commit-push.outputs.commit-hash }}
+      continue-on-error: true
     - name: Deploy to Azure Static Web App
       uses: Azure/static-web-apps-deploy@v1
       with:
