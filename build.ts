@@ -8,7 +8,7 @@ import { crc32 } from "node-crc";
 import { isRelativeUrl } from "./utils";
 
 const ROOT_PATH = __dirname + "/OI-wiki";
-const CDN_ROOT = "https://cdn.menci.xyz/oi-wiki/";
+const CDN_ROOT = "https://cdn-static.menci.xyz/oi-wiki/";
 
 klaw(ROOT_PATH).on("data", item => {
   if (item.stats.isFile() && item.path.toLowerCase().endsWith(".html"))
