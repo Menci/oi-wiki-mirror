@@ -1,4 +1,4 @@
-import cheerio from "cheerio";
+import { parse, HTMLElement } from "node-html-parser";
 import klaw from "klaw";
 import fs from "fs";
 import path from "path/posix";
@@ -29,16 +29,16 @@ const process = async (htmlFilePath: string) => {
   const htmlFileFileUrl = url.pathToFileURL("/" + htmlFileRelativePath);
   const htmlFileCdnUrl = new URL(htmlFileRelativePath, CDN_ROOT);
   
-  const $ = cheerio.load(
+  const document = parse(
     await fs.promises.readFile(htmlFilePath, "utf-8")
   );
 
-  const processTag = (selector: string, attributeName: string, filter?: (tag: cheerio.Cheerio) => boolean) =>
+  const processTag = (selector: string, attributeName: string, filter?: (tag: HTMLElement) => boolean) =>
     Promise.all(
-      $(selector).toArray().map(async element => {
-        if (filter && !filter($(element))) return;
+      document.querySelectorAll(selector).map(async element => {
+        if (filter && !filter(element)) return;
 
-        const originalUrl = $(element).attr(attributeName);
+        const originalUrl = element.getAttribute(attributeName);
         if (!originalUrl) return;
 
         if (isRelativeUrl(originalUrl)) {
@@ -55,7 +55,7 @@ const process = async (htmlFilePath: string) => {
           const resolvedCdnUrl = new URL(originalUrl.startsWith("/") ? originalUrl.slice(1) : originalUrl, htmlFileCdnUrl);
           resolvedCdnUrl.search = "";
           resolvedCdnUrl.searchParams.set("h", fileHash);
-          $(element).attr(attributeName, resolvedCdnUrl.toString());
+          element.setAttribute(attributeName, resolvedCdnUrl.toString());
         }
       })
     )
@@ -66,6 +66,6 @@ const process = async (htmlFilePath: string) => {
     processTag("img", "src")
   ]);
 
-  await fs.promises.writeFile(htmlFilePath, $.html());
+  await fs.promises.writeFile(htmlFilePath, document.outerHTML);
   console.log(`Processed: ${htmlFilePath}`);
 };

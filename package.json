@@ -7,9 +7,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "cheerio": "^1.0.0-rc.10",
     "klaw": "^4.0.1",
-    "node-crc": "^2.0.11"
+    "node-crc": "^2.0.11",
+    "node-html-parser": "^5.2.0"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.30",
