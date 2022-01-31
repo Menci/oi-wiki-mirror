@@ -50,12 +50,16 @@ jobs:
         cp ../public/* .
         git add .
         git commit -am "Upload mirror site on $(date '+%Y-%m-%d %H:%M:%S')"
-        git remote add mirror https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git remote add mirror git@github.com:MenciStaticSites/oi-wiki.git
         git fetch --unshallow origin
-        git push -f mirror HEAD:website
-        
+        eval `ssh-agent -s`
+        echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+        git push -f mirror HEAD:main
+
         echo "::set-output commit-hash=$(git rev-parse HEAD)"
         rm -rf .git
+      env:
+        SSH_KEY: ${{ secrets.DEPLOY_KEY_TARGET }}
     - name: Deploy to Aliyun OSS
       uses: Menci/upload-to-oss@main
       with:
