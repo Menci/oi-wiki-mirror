@@ -47,7 +47,6 @@ jobs:
 
         cd OI-wiki
 
-        cp ../public/* .
         git add .
         git commit -am "Upload mirror site on $(date '+%Y-%m-%d %H:%M:%S')"
         git remote add mirror git@github.com:MenciStaticSites/oi-wiki.git
@@ -92,3 +91,4 @@ jobs:
         action: upload
         app_location: /OI-wiki
         skip_app_build: true
+        config_file_location: .
