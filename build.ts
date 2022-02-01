@@ -66,6 +66,11 @@ const process = async (htmlFilePath: string) => {
     processTag("img", "src")
   ]);
 
+  $("a[title=编辑此页], a.md-header-nav__button, a.md-nav__button").each((_, element) => {
+    const href = $(element).attr("href");
+    $(element).attr("href", href.replace("https://oi-wiki.org/", "/"));
+  });
+
   await fs.promises.writeFile(htmlFilePath, $.html());
   console.log(`Processed: ${htmlFilePath}`);
 };
