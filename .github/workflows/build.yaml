@@ -38,7 +38,7 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
         restore-keys: ${{ runner.os }}-node-
     - name: Install Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       run: yarn --frozen-lockfile
     - name: Build
       run: yarn ts-node build.ts
