@@ -68,31 +68,12 @@ jobs:
         rm -rf .git
       env:
         SSH_KEY: ${{ secrets.DEPLOY_KEY_TARGET }}
-    - name: Deploy to Aliyun OSS
-      uses: Menci/upload-to-oss@main
+    - name: Deploy to Static CDN
+      uses: AyaInfra/StaticCDNDeploy@main
       with:
-          access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-          access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-          bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-          endpoint: ${{ secrets.ALIYUN_OSS_ENDPOINT }}
-          local-path: OI-wiki
-          remote-path: oi-wiki
-          headers: |
-            filename => (
-              {
-                "Cache-Control": `public, max-age=${[".html", ".xml"].some(ext => filename.endsWith(ext)) ? 60 : 604800}`
-              }
-            )
-          delay-html-file-upload: true
-    - name: Wait for Cloudflare Pages Deployment
-      uses: Menci/cf-pages-await@main
-      with:
-        accountEmail: ${{ secrets.CLOUDFLARE_ACCOUNT_EMAIL }}
-        apiKey: ${{ secrets.CLOUDFLARE_API_KEY }}
-        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        project: menci-oi-wiki
-        commitHash: ${{ steps.commit-push.outputs.commit-hash }}
-      continue-on-error: true
+        deploy-credentials: ${{ secrets.STATIC_CDN_CREDENTIALS }}
+        local-path: OI-wiki
+        remote-path: oi-wiki
     - name: Deploy to Azure Static Web App
       uses: Azure/static-web-apps-deploy@v1
       with:
