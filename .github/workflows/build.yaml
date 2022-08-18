@@ -46,7 +46,7 @@ jobs:
       uses: Menci/service-worker-redirect-origin@main
       with:
         www-root: OI-wiki
-        target-base-url: https://cdn-static.menci.xyz/oi-wiki/
+        target-base-url: https://static.cdn.menci.xyz/oi-wiki/
         http-404-page: 404.html
     - id: commit-push
       name: Push to GitHub
