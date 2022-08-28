@@ -9,6 +9,8 @@ import { isRelativeUrl } from "./utils";
 
 const ROOT_PATH = __dirname + "/OI-wiki";
 const CDN_ROOT = "https://static.cdn.menci.xyz/oi-wiki/";
+const PLAUSIBLE_DOMAIN = "oi.wiki"
+const PLAUSIBLE_SCRIPT = "https://stat.u.sb/js/plausible.js";
 
 klaw(ROOT_PATH).on("data", item => {
   if (item.stats.isFile() && item.path.toLowerCase().endsWith(".html"))
@@ -70,6 +72,12 @@ const process = async (htmlFilePath: string) => {
     const href = $(element).attr("href");
     $(element).attr("href", href.replace("https://oi-wiki.org/", "/"));
   });
+
+  const plausibleTag = $("<script>");
+  plausibleTag.attr("async", "");
+  plausibleTag.attr("data-domain", PLAUSIBLE_DOMAIN);
+  plausibleTag.attr("src", PLAUSIBLE_SCRIPT);
+  $("head").append(plausibleTag);
 
   await fs.promises.writeFile(htmlFilePath, $.html());
   console.log(`Processed: ${htmlFilePath}`);
