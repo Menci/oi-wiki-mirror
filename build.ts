@@ -73,6 +73,12 @@ const process = async (htmlFilePath: string) => {
     $(element).attr("href", href.replace("https://oi-wiki.org/", "/"));
   });
 
+  $("script[src=\"https://giscus.app/client.js\"]").each((_, element) => {
+    $(element).attr("src", "https://giscus.api.menci.xyz/client.js");
+    $(element).attr("data-theme", "menci");
+    $(element).removeAttr("crossorigin");
+  });
+
   const plausibleTag = $("<script>");
   plausibleTag.attr("async", "");
   plausibleTag.attr("data-domain", PLAUSIBLE_DOMAIN);
