@@ -7,7 +7,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@types/html-minifier-terser": "^7.0.0",
     "cheerio": "^1.0.0-rc.10",
+    "html-minifier-terser": "^7.1.0",
     "klaw": "^4.0.1",
     "node-crc": "^2.0.11"
   },
