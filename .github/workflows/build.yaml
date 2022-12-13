@@ -41,7 +41,7 @@ jobs:
       if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       run: yarn --frozen-lockfile
     - name: Build
-      run: yarn ts-node build.ts
+      run: yarn ts-node-esm build.ts
     - name: Inject Service Worker
       uses: Menci/service-worker-redirect-origin@main
       with:
