@@ -103,7 +103,8 @@ const process = async (htmlFilePath: string) => {
     removeStyleLinkTypeAttributes: true,
     sortClassName: true,
     useShortDoctype: true,
-    collapseWhitespace: true
+    minifyJS: true,
+    minifyCSS: true
   }));
   console.log(`Processed: ${htmlFilePath}`);
 };
