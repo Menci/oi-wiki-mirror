@@ -18,20 +18,20 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Checkout OI-wiki
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: OI-wiki/OI-wiki
         ref: ${{ github.event_name == 'push' && 'gh-pages' || github.event.inputs.ref }}
         path: OI-wiki
     - name: Set up Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: 17.x
         check-latest: true
     - name: Cache node_modules
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: cache
       with:
         path: node_modules
