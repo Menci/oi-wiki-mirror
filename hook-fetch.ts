@@ -102,9 +102,7 @@ if (!Promise.any) {
       if (!response.ok) {
         // Oops! the service worker CDN may not available now
         // Fallback to the original URL
-  
-        // This error won't be used, just to indicate the fetch failed
-        throw null;
+        await new Promise(() => {}); // Never resolves
       }
   
       return response;
