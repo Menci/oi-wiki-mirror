@@ -6,15 +6,37 @@ import url from "url";
 import { crc32 } from "node-crc";
 import { minify } from "html-minifier-terser";
 import * as terser from "terser";
+import * as SWC from "@swc/core";
 
 import { isRelativeUrl } from "./utils.js";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const ROOT_PATH = __dirname + "/OI-wiki";
 const CDN_ROOT = "https://static.cdn.menci.xyz/oi-wiki/";
+const _404_PAGE = "404.html";
 const PLAUSIBLE_DOMAIN = "oi.wiki"
 const PLAUSIBLE_SCRIPT = "https://stat.u.sb/js/plausible.js";
-const HOOK_FETCH_SCRIPT = (await terser.minify(fs.readFileSync(__dirname + "/hook-fetch.js", "utf-8").replace("__CDN_ROOT__", JSON.stringify(CDN_ROOT)))).code;
+
+const HOOK_FETCH_SCRIPT = (
+  await terser.minify(
+    (
+      await SWC.transform(
+        await fs.promises.readFile(__dirname + "/hook-fetch.ts", "utf-8"),
+        {
+          jsc: {
+            loose: true,
+            parser: { syntax: "typescript" },
+            target: "es2015"
+          }
+        }
+      )
+    ).code,
+    { enclose: true }
+  )
+).code
+ .replace("__CDN_ROOT__", JSON.stringify(CDN_ROOT))
+ .replace("__404_PAGE__", JSON.stringify(_404_PAGE));
+console.error(`HOOK_FETCH_SCRIPT length: ${HOOK_FETCH_SCRIPT.length}`);
 
 klaw(ROOT_PATH).on("data", item => {
   if (item.stats.isFile() && item.path.toLowerCase().endsWith(".html"))
